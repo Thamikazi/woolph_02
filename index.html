@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Woolph — Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #000000;
+  --woolph-green: #64D972;
+  --light-green: #93F9C0;
+  --card-bg: #0d2a1f;
+  --surface: #111c16;
+  --surface2: #162a1e;
+  --surface3: #1e3828;
+  --border: rgba(100,217,114,0.15);
+  --border2: rgba(100,217,114,0.25);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255,255,255,0.6);
+  --text-muted: rgba(255,255,255,0.35);
+  --red: #ff5c5c;
+  --amber: #f5a623;
+  --blue: #4a9fff;
+  --sidebar-w: 220px;
+  --header-h: 56px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--black);color:var(--text-primary);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;display:flex;flex-direction:column;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+
+/* ── HEADER ── */
+#header{
+  position:fixed;top:0;left:0;right:0;height:var(--header-h);
+  background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 20px;gap:16px;z-index:100
+}
+.logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:600;color:var(--woolph-green)}
+.logo-icon{width:32px;height:20px;display:flex;gap:4px;align-items:center}
+.logo-o{width:14px;height:14px;border-radius:50%;border:3px solid var(--woolph-green)}
+.logo-o2{width:14px;height:14px;border-radius:50%;border:3px solid var(--light-green)}
+.header-spacer{flex:1}
+.header-pill{
+  padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;
+  border:1px solid var(--border2);color:var(--text-secondary);cursor:pointer;
+  transition:all .2s
+}
+.header-pill:hover{background:var(--surface);color:var(--woolph-green);border-color:var(--woolph-green)}
+.header-user{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--woolph-green),var(--light-green));
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;color:#000
+}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  position:fixed;top:var(--header-h);left:0;bottom:0;width:var(--sidebar-w);
+  background:rgba(0,0,0,0.85);border-right:1px solid var(--border);
+  overflow-y:auto;padding:16px 0;z-index:90
+}
+.nav-section{margin-bottom:8px}
+.nav-label{
+  padding:6px 16px;font-size:10px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-muted)
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:8px 16px;
+  color:var(--text-secondary);cursor:pointer;transition:all .15s;
+  border-left:2px solid transparent;font-size:13px
+}
+.nav-item:hover{background:var(--surface);color:var(--text-primary)}
+.nav-item.active{
+  background:var(--surface);color:var(--woolph-green);
+  border-left-color:var(--woolph-green)
+}
+.nav-item .nav-icon{width:16px;text-align:center;flex-shrink:0;font-size:15px}
+.nav-badge{
+  margin-left:auto;background:var(--red);color:#fff;
+  border-radius:10px;padding:1px 6px;font-size:10px;font-weight:600
+}
+.nav-badge.amber{background:var(--amber);color:#000}
+.nav-badge.green{background:var(--woolph-green);color:#000}
+
+/* ── MAIN ── */
+#main{
+  margin-left:var(--sidebar-w);margin-top:var(--header-h);
+  padding:24px;min-height:calc(100vh - var(--header-h))
+}
+.page{display:none}
+.page.active{display:block}
+
+/* ── PAGE HEADER ── */
+.page-header{margin-bottom:24px}
+.page-title{font-size:22px;font-weight:600;color:var(--text-primary)}
+.page-subtitle{font-size:13px;color:var(--text-muted);margin-top:4px}
+.page-actions{display:flex;gap:8px;margin-top:16px}
+
+/* ── BUTTONS ── */
+.btn{
+  padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;
+  border:1px solid var(--border2);background:transparent;color:var(--text-secondary);
+  transition:all .15s;cursor:pointer
+}
+.btn:hover{background:var(--surface2);color:var(--text-primary)}
+.btn-primary{
+  background:var(--woolph-green);color:#000;border-color:var(--woolph-green)
+}
+.btn-primary:hover{background:#4fc45e;border-color:#4fc45e}
+.btn-danger{background:transparent;color:var(--red);border-color:rgba(255,92,92,.3)}
+.btn-danger:hover{background:rgba(255,92,92,.1)}
+.btn-sm{padding:4px 10px;font-size:12px;border-radius:6px}
+
+/* ── CARDS ── */
+.card{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:12px;padding:20px
+}
+.card-sm{padding:14px 16px}
+.card-title{font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:12px}
+.card-val{font-size:28px;font-weight:600;color:var(--text-primary);line-height:1.1}
+.card-delta{font-size:12px;margin-top:4px}
+.delta-up{color:#4fc45e}
+.delta-down{color:var(--red)}
+
+/* ── GRID LAYOUTS ── */
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:900px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:1fr}}
+
+/* ── TABLES ── */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{
+  padding:8px 12px;text-align:left;font-size:11px;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);
+  border-bottom:1px solid var(--border)
+}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:hover{background:var(--surface)}
+tbody td{padding:10px 12px;font-size:13px;color:var(--text-secondary)}
+tbody td:first-child{color:var(--text-primary);font-weight:500}
+
+/* ── BADGES ── */
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500
+}
+.badge-red{background:rgba(255,92,92,.15);color:var(--red);border:1px solid rgba(255,92,92,.2)}
+.badge-amber{background:rgba(245,166,35,.15);color:var(--amber);border:1px solid rgba(245,166,35,.2)}
+.badge-green{background:rgba(100,217,114,.15);color:var(--woolph-green);border:1px solid rgba(100,217,114,.2)}
+.badge-blue{background:rgba(74,159,255,.15);color:var(--blue);border:1px solid rgba(74,159,255,.2)}
+.badge-gray{background:rgba(255,255,255,.06);color:var(--text-muted);border:1px solid var(--border)}
+
+/* ── RISK SCORE ── */
+.risk-bar{height:6px;border-radius:3px;background:var(--surface3);overflow:hidden}
+.risk-fill{height:100%;border-radius:3px;transition:width .4s}
+.risk-high{background:var(--red)}
+.risk-med{background:var(--amber)}
+.risk-low{background:var(--woolph-green)}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0}
+.tab{
+  padding:8px 16px;font-size:13px;font-weight:500;color:var(--text-muted);
+  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s
+}
+.tab:hover{color:var(--text-secondary)}
+.tab.active{color:var(--woolph-green);border-bottom-color:var(--woolph-green)}
+
+/* ── TIMELINE ── */
+.timeline{padding-left:20px;border-left:1px solid var(--border)}
+.timeline-item{position:relative;padding:0 0 16px 20px}
+.timeline-item::before{
+  content:'';position:absolute;left:-5px;top:4px;
+  width:8px;height:8px;border-radius:50%;border:2px solid var(--woolph-green);
+  background:var(--black)
+}
+.timeline-time{font-size:11px;color:var(--text-muted);margin-bottom:2px}
+.timeline-text{font-size:13px;color:var(--text-secondary)}
+
+/* ── ALERT ITEM ── */
+.alert-item{
+  display:flex;align-items:center;gap:12px;padding:12px 16px;
+  border-radius:8px;border:1px solid var(--border);background:var(--card-bg);
+  margin-bottom:8px;cursor:pointer;transition:all .15s
+}
+.alert-item:hover{border-color:var(--border2);background:var(--surface2)}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.alert-body{flex:1}
+.alert-title{font-size:13px;font-weight:500;color:var(--text-primary)}
+.alert-meta{font-size:11px;color:var(--text-muted);margin-top:2px}
+.alert-actions{display:flex;gap:6px;align-items:center}
+
+/* ── FORM ── */
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:6px}
+.form-control{
+  width:100%;padding:8px 12px;border-radius:8px;
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text-primary);font-family:inherit;font-size:13px;
+  outline:none;transition:border-color .15s
+}
+.form-control:focus{border-color:var(--woolph-green)}
+select.form-control option{background:#1e3828}
+
+/* ── PROGRESS ── */
+.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.progress-label{font-size:12px;color:var(--text-secondary);width:140px;flex-shrink:0}
+.progress-bar{flex:1;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--woolph-green)}
+.progress-val{font-size:12px;color:var(--woolph-green);width:36px;text-align:right;flex-shrink:0}
+
+/* ── STAT ROW ── */
+.stat-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.stat-row:last-child{border-bottom:none}
+.stat-key{font-size:12px;color:var(--text-muted)}
+.stat-v{font-size:13px;font-weight:500;color:var(--text-primary)}
+
+/* ── PLAYER PROFILE ── */
+.player-header{
+  display:flex;align-items:flex-start;gap:20px;
+  padding:20px;background:var(--card-bg);border:1px solid var(--border);
+  border-radius:12px;margin-bottom:16px
+}
+.player-avatar{
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--woolph-green),var(--light-green));
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:700;color:#000;flex-shrink:0
+}
+.player-name{font-size:18px;font-weight:600;color:var(--text-primary)}
+.player-id{font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace}
+
+/* ── EMPTY STATE ── */
+.empty{
+  text-align:center;padding:48px 24px;color:var(--text-muted)
+}
+.empty-icon{font-size:32px;margin-bottom:12px;opacity:.4}
+
+/* ── SEARCH BAR ── */
+.search-bar{
+  display:flex;align-items:center;gap:10px;padding:8px 14px;
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  flex:1;max-width:320px
+}
+.search-bar input{
+  background:none;border:none;outline:none;color:var(--text-primary);
+  font-family:inherit;font-size:13px;flex:1
+}
+.search-bar input::placeholder{color:var(--text-muted)}
+
+/* ── TOGGLE ── */
+.toggle{display:flex;gap:2px;background:var(--surface2);border-radius:8px;padding:3px;border:1px solid var(--border)}
+.toggle-btn{
+  padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500;
+  color:var(--text-muted);background:transparent;border:none;cursor:pointer;transition:all .15s
+}
+.toggle-btn.active{background:var(--surface);color:var(--woolph-green)}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px}
+
+/* ── TOOLTIP ── */
+.tooltip-wrap{position:relative;display:inline-flex}
+.tooltip{
+  position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:var(--surface3);color:var(--text-primary);font-size:11px;
+  padding:4px 8px;border-radius:4px;white-space:nowrap;pointer-events:none;
+  opacity:0;transition:opacity .15s
+}
+.tooltip-wrap:hover .tooltip{opacity:1}
+
+/* ── NOTIFICATION ── */
+#toast{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  padding:10px 18px;border-radius:10px;
+  background:var(--woolph-green);color:#000;font-size:13px;font-weight:500;
+  transform:translateY(80px);opacity:0;transition:all .3s
+}
+#toast.show{transform:translateY(0);opacity:1}
+
+/* ── MODAL ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);
+  z-index:200;align-items:center;justify-content:center
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:16px;padding:28px;width:480px;max-width:90vw;max-height:80vh;overflow-y:auto
+}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:20px;color:var(--text-primary)}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+
+/* ── RULE CARD ── */
+.rule-card{
+  background:var(--card-bg);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px
+}
+.rule-card .rule-body{flex:1}
+.rule-name{font-size:13px;font-weight:500;color:var(--text-primary)}
+.rule-desc{font-size:12px;color:var(--text-muted);margin-top:2px}
+
+/* ── CHART WRAPPER ── */
+.chart-box{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.chart-box-title{font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:16px}
+
+/* ── COMPLIANCE STATUS ── */
+.compliance-item{
+  display:flex;align-items:center;gap:12px;padding:10px 14px;
+  border-radius:8px;background:var(--card-bg);border:1px solid var(--border);margin-bottom:8px
+}
+.rag-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.rag-green{background:var(--woolph-green)}
+.rag-amber{background:var(--amber)}
+.rag-red{background:var(--red)}
+.compliance-name{font-size:13px;font-weight:500;color:var(--text-primary);flex:1}
+.compliance-status{font-size:12px;color:var(--text-muted)}
+
+/* ── KANBAN ── */
+.kanban{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px}
+.kanban-col{flex-shrink:0;width:220px}
+.kanban-col-header{
+  padding:8px 12px;border-radius:8px 8px 0 0;
+  font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--text-muted);background:var(--surface2);border:1px solid var(--border);border-bottom:none
+}
+.kanban-body{
+  background:var(--surface2);border:1px solid var(--border);
+  border-top:none;border-radius:0 0 8px 8px;padding:8px;min-height:200px
+}
+.kanban-card{
+  background:var(--card-bg);border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:border-color .15s
+}
+.kanban-card:hover{border-color:var(--border2)}
+.kanban-card-title{font-size:12px;font-weight:500;color:var(--text-primary)}
+.kanban-card-sub{font-size:11px;color:var(--text-muted);margin-top:3px}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="header">
+  <div class="logo">
+    <div class="logo-icon">
+      <div class="logo-o"></div>
+      <div class="logo-o2"></div>
+    </div>
+    woolph
+  </div>
+  <div class="header-spacer"></div>
+  <div class="search-bar" style="max-width:260px">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" placeholder="Search players, alerts…" oninput="handleGlobalSearch(this.value)">
+  </div>
+  <button class="header-pill" onclick="showToast('Refreshing data…')">↻ Refresh</button>
+  <button class="header-pill" onclick="navigate('reports')">Reports</button>
+  <div class="header-user" title="Tessa Samuels">TS</div>
+</header>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item active" onclick="navigate('dashboard')">
+      <span class="nav-icon">⊡</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="navigate('reports')">
+      <span class="nav-icon">⊞</span> Reports
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Player Monitoring</div>
+    <div class="nav-item" onclick="navigate('player360')">
+      <span class="nav-icon">◎</span> Player 360
+    </div>
+    <div class="nav-item" onclick="navigate('safer-gambling')">
+      <span class="nav-icon">♡</span> Safer Gambling
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Alerts</div>
+    <div class="nav-item" onclick="navigate('fraud')">
+      <span class="nav-icon">⚑</span> Fraud Alerts
+      <span class="nav-badge">14</span>
+    </div>
+    <div class="nav-item" onclick="navigate('aml')">
+      <span class="nav-icon">◈</span> AML Monitoring
+      <span class="nav-badge amber">6</span>
+    </div>
+    <div class="nav-item" onclick="navigate('bonus')">
+      <span class="nav-icon">⊹</span> Bonus Abuse
+      <span class="nav-badge amber">3</span>
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Compliance</div>
+    <div class="nav-item" onclick="navigate('cases')">
+      <span class="nav-icon">⊟</span> Case Management
+    </div>
+    <div class="nav-item" onclick="navigate('compliance')">
+      <span class="nav-icon">✦</span> Compliance Status
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Management</div>
+    <div class="nav-item" onclick="navigate('rules')">
+      <span class="nav-icon">⊗</span> Rules Engine
+    </div>
+    <div class="nav-item" onclick="navigate('upload')">
+      <span class="nav-icon">↑</span> Bulk Upload
+    </div>
+    <div class="nav-item" onclick="navigate('settings')">
+      <span class="nav-icon">⚙</span> Settings
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+
+  <!-- ══ DASHBOARD ══ -->
+  <div id="page-dashboard" class="page active">
+    <div class="page-header">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div class="page-title">Good morning, Tessa</div>
+          <div class="page-subtitle">You have 3 open alerts and 2 reviews due today · Wednesday, 13 May 2026</div>
+        </div>
+        <div style="text-align:right;font-size:11px;color:var(--text-muted)">
+          Last updated 09:14 · Grand Casino ZA
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-4">
+      <div class="card card-sm">
+        <div class="card-title">Open Alerts</div>
+        <div class="card-val">14</div>
+        <div class="card-delta delta-up">↑ 3 since yesterday</div>
+      </div>
+      <div class="card card-sm">
+        <div class="card-title">Under Review</div>
+        <div class="card-val">7</div>
+        <div class="card-delta" style="color:var(--amber)">2 due today</div>
+      </div>
+      <div class="card card-sm">
+        <div class="card-title">Closed Today</div>
+        <div class="card-val">5</div>
+        <div class="card-delta delta-up">↑ 2 vs yesterday</div>
+      </div>
+      <div class="card card-sm">
+        <div class="card-title">High Risk Players</div>
+        <div class="card-val">3</div>
+        <div class="card-delta delta-down">Risk score ≥ 70</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="chart-box">
+          <div class="chart-box-title">Alert Volume — Last 7 Days</div>
+          <div style="position:relative;height:180px">
+            <canvas id="alertChart" role="img" aria-label="Alert volume over last 7 days">Fraud alerts over 7 days.</canvas>
+          </div>
+        </div>
+        <div class="chart-box">
+          <div class="chart-box-title">Alerts by Type</div>
+          <div style="display:flex;gap:20px;align-items:center">
+            <div style="position:relative;height:120px;width:120px;flex-shrink:0">
+              <canvas id="typeChart" role="img" aria-label="Alert breakdown by type">Alert types pie chart.</canvas>
+            </div>
+            <div style="flex:1">
+              <div class="progress-row"><div class="progress-label">Fraud</div><div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div><div class="progress-val">55%</div></div>
+              <div class="progress-row"><div class="progress-label">AML</div><div class="progress-bar"><div class="progress-fill" style="width:25%;background:var(--amber)"></div></div><div class="progress-val" style="color:var(--amber)">25%</div></div>
+              <div class="progress-row"><div class="progress-label">Responsible Gambling</div><div class="progress-bar"><div class="progress-fill" style="width:12%;background:var(--blue)"></div></div><div class="progress-val" style="color:var(--blue)">12%</div></div>
+              <div class="progress-row"><div class="progress-label">Bonus Abuse</div><div class="progress-bar"><div class="progress-fill" style="width:8%;background:var(--red)"></div></div><div class="progress-val" style="color:var(--red)">8%</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Recent Alerts</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Player</th><th>Type</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                <tr onclick="navigate('fraud')"><td>Pinklady</td><td><span class="badge badge-amber">Bad Answers</span></td><td><span class="badge badge-blue">Review</span></td><td><button class="btn btn-sm">View</button></td></tr>
+                <tr onclick="navigate('fraud')"><td>DarkKnight88</td><td><span class="badge badge-red">High Velocity</span></td><td><span class="badge badge-red">High</span></td><td><button class="btn btn-sm">View</button></td></tr>
+                <tr onclick="navigate('fraud')"><td>MrFortune</td><td><span class="badge badge-amber">Bonus Abuse</span></td><td><span class="badge badge-blue">Review</span></td><td><button class="btn btn-sm">View</button></td></tr>
+                <tr onclick="navigate('fraud')"><td>StarPlayer99</td><td><span class="badge badge-gray">SOW Request</span></td><td><span class="badge badge-green">New</span></td><td><button class="btn btn-sm">View</button></td></tr>
+                <tr onclick="navigate('fraud')"><td>NightOwl</td><td><span class="badge badge-amber">IP Mismatch</span></td><td><span class="badge badge-red">High</span></td><td><button class="btn btn-sm">View</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top:12px;text-align:right"><button class="btn btn-sm" onclick="navigate('fraud')">View all 14 →</button></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Compliance Snapshot</div>
+          <div class="compliance-item"><div class="rag-dot rag-green"></div><div class="compliance-name">FIC Act (AML)</div><div class="compliance-status">Compliant</div></div>
+          <div class="compliance-item"><div class="rag-dot rag-green"></div><div class="compliance-name">POPIA</div><div class="compliance-status">Compliant</div></div>
+          <div class="compliance-item"><div class="rag-dot rag-amber"></div><div class="compliance-name">ISO 27001</div><div class="compliance-status">Audit pending</div></div>
+          <div class="compliance-item"><div class="rag-dot rag-amber"></div><div class="compliance-name">SOC 2 Type II</div><div class="compliance-status">In progress</div></div>
+          <div class="compliance-item"><div class="rag-dot rag-green"></div><div class="compliance-name">WCGRB Licensing</div><div class="compliance-status">Compliant</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FRAUD ALERTS ══ -->
+  <div id="page-fraud" class="page">
+    <div class="page-header">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div class="page-title">Fraud Alerts</div>
+          <div class="page-subtitle">14 open alerts · Last updated 09:14</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="search-bar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Search alerts…"></div>
+          <select class="form-control" style="width:130px">
+            <option>All Types</option><option>High Velocity</option><option>Bad Answers</option><option>IP Mismatch</option><option>Bonus Abuse</option><option>SOW Request</option>
+          </select>
+          <select class="form-control" style="width:110px">
+            <option>All Status</option><option>New</option><option>Review</option><option>High</option><option>Closed</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="openModal('new-alert')">+ New Alert</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="card card-sm"><div class="card-title">New</div><div class="card-val" style="color:var(--woolph-green)">4</div></div>
+      <div class="card card-sm"><div class="card-title">Under Review</div><div class="card-val" style="color:var(--blue)">7</div></div>
+      <div class="card card-sm"><div class="card-title">High Priority</div><div class="card-val" style="color:var(--red)">3</div></div>
+      <div class="card card-sm"><div class="card-title">SLA Breached</div><div class="card-val" style="color:var(--amber)">2</div></div>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Date</th><th>Player</th><th>Type</th><th>Brand</th><th>Risk</th><th>Status</th><th>Assigned</th><th>SLA</th><th></th></tr></thead>
+          <tbody id="fraud-table">
+            <tr><td><div class="alert-dot" style="background:var(--red)"></div></td><td>13 May</td><td onclick="openPlayerModal('Pinklady')" style="cursor:pointer;color:var(--woolph-green)">Pinklady</td><td><span class="badge badge-amber">Bad Answers</span></td><td>Grand Casino</td><td><div class="risk-bar" style="width:80px"><div class="risk-fill risk-high" style="width:72%"></div></div></td><td><span class="badge badge-blue">Review</span></td><td>Sarah J.</td><td style="color:var(--amber)">2h left</td><td><button class="btn btn-sm" onclick="showToast('Alert opened')">Open</button></td></tr>
+            <tr><td><div class="alert-dot" style="background:var(--red)"></div></td><td>13 May</td><td onclick="openPlayerModal('DarkKnight88')" style="cursor:pointer;color:var(--woolph-green)">DarkKnight88</td><td><span class="badge badge-red">High Velocity</span></td><td>Grand Casino</td><td><div class="risk-bar" style="width:80px"><div class="risk-fill risk-high" style="width:88%"></div></div></td><td><span class="badge badge-red">High</span></td><td>Marcus T.</td><td style="color:var(--red)">Overdue</td><td><button class="btn btn-sm" onclick="showToast('Alert opened')">Open</button></td></tr>
+            <tr><td><div class="alert-dot" style="background:var(--amber)"></div></td><td>12 May</td><td onclick="openPlayerModal('MrFortune')" style="cursor:pointer;color:var(--woolph-green)">MrFortune</td><td><span class="badge badge-amber">Bonus Abuse</span></td><td>Grand Casino</td><td><div class="risk-bar" style="width:80px"><div class="risk-fill risk-med" style="width:55%"></div></div></td><td><span class="badge badge-blue">Review</span></td><td>Sarah J.</td><td style="color:var(--text-muted)">4h left</td><td><button class="btn btn-sm" onclick="showToast('Alert opened')">Open</button></td></tr>
+            <tr><td><div class="alert-dot" style="background:var(--woolph-green)"></div></td><td>12 May</td><td onclick="openPlayerModal('StarPlayer99')" style="cursor:pointer;color:var(--woolph-green)">StarPlayer99</td><td><span class="badge badge-gray">SOW Request</span></td><td>Grand Casino</td><td><div class="risk-bar" style="width:80px"><div class="risk-fill risk-low" style="width:30%"></div></div></td><td><span class="badge badge-green">New</span></td><td>—</td><td style="color:var(--text-muted)">8h left</td><td><button class="btn btn-sm btn-primary" onclick="showToast('Assigned to you')">Assign</button></td></tr>
+            <tr><td><div class="alert-dot" style="background:var(--red)"></div></td><td>11 May</td><td onclick="openPlayerModal('NightOwl')" style="cursor:pointer;color:var(--woolph-green)">NightOwl</td><td><span class="badge badge-amber">IP Mismatch</span></td><td>Grand Casino</td><td><div class="risk-bar" style="width:80px"><div class="risk-fill risk-high" style="width:68%"></div></div></td><td><span class="badge badge-red">High</span></td><td>Kai L.</td><td style="color:var(--red)">Overdue</td><td><button class="btn btn-sm" onclick="showToast('Alert opened')">Open</button></td></tr>
+            <tr><td><div class="alert-dot" style="background:var(--amber)"></div></td><td>11 May</td><td style="cursor:pointer;color:var(--woolph-green)" onclick="openPlayerModal('GoldenAce')">GoldenAce</td><td><span class="badge badge-red">Multi Account</span></td><td>Grand Casino</td><td><div class="risk-bar" style="width:80px"><div class="risk-fill risk-high" style="width:78%"></div></div></td><td><span class="badge badge-blue">Review</span></td><td>Marcus T.</td><td style="color:var(--text-muted)">6h left</td><td><button class="btn btn-sm" onclick="showToast('Alert opened')">Open</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ AML MONITORING ══ -->
+  <div id="page-aml" class="page">
+    <div class="page-header">
+      <div class="page-title">AML Monitoring</div>
+      <div class="page-subtitle">FIC Act compliance · Threshold: R24,999</div>
+    </div>
+
+    <div class="grid-4">
+      <div class="card card-sm"><div class="card-title">CTR Alerts (30d)</div><div class="card-val">23</div><div class="card-delta delta-up">↑ 4 vs last month</div></div>
+      <div class="card card-sm"><div class="card-title">STR Filed (30d)</div><div class="card-val">6</div><div class="card-delta" style="color:var(--text-muted)">FIC submitted</div></div>
+      <div class="card card-sm"><div class="card-title">Structuring Flags</div><div class="card-val" style="color:var(--amber)">4</div><div class="card-delta delta-down">2 new today</div></div>
+      <div class="card card-sm"><div class="card-title">Pending Review</div><div class="card-val" style="color:var(--blue)">6</div><div class="card-delta" style="color:var(--text-muted)">Avg age: 1.4d</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">AML Alert Queue</div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--red)"></div><div class="alert-body"><div class="alert-title">Threshold breach — R27,500 deposit</div><div class="alert-meta">GoldenAce · 13 May · Grand Casino</div></div><span class="badge badge-red">CTR Required</span></div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--amber)"></div><div class="alert-body"><div class="alert-title">Structuring pattern detected</div><div class="alert-meta">NightOwl · 12 May · 5x deposits @ R4,800</div></div><span class="badge badge-amber">Review</span></div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--amber)"></div><div class="alert-body"><div class="alert-title">Layering — 3 rapid withdrawals</div><div class="alert-meta">MrFortune · 11 May · Grand Casino</div></div><span class="badge badge-amber">Review</span></div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--woolph-green)"></div><div class="alert-body"><div class="alert-title">PEP match — name screening</div><div class="alert-meta">StarPlayer99 · 10 May</div></div><span class="badge badge-green">New</span></div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--woolph-green)"></div><div class="alert-body"><div class="alert-title">SOF verification overdue</div><div class="alert-meta">Pinklady · 09 May</div></div><span class="badge badge-blue">Pending</span></div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">FIC Act Thresholds</div>
+          <div class="stat-row"><div class="stat-key">Single Cash In / Out Trigger</div><div class="stat-v">R 24,999</div></div>
+          <div class="stat-row"><div class="stat-key">30-Day Rolling Watch</div><div class="stat-v">R 100,000</div></div>
+          <div class="stat-row"><div class="stat-key">STR Submission SLA</div><div class="stat-v">15 business days</div></div>
+          <div class="stat-row"><div class="stat-key">CTR Submission SLA</div><div class="stat-v">3 business days</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">STR/CTR Report Generator</div>
+          <div class="form-group"><label class="form-label">Report Type</label><select class="form-control"><option>Suspicious Transaction Report (STR)</option><option>Cash Transaction Report (CTR)</option></select></div>
+          <div class="form-group"><label class="form-label">Player ID</label><input class="form-control" type="text" placeholder="Enter player ID…"></div>
+          <div class="form-group"><label class="form-label">Transaction Date Range</label><input class="form-control" type="text" placeholder="01 May 2026 — 13 May 2026"></div>
+          <button class="btn btn-primary" onclick="showToast('Report generated — check Reports page')">Generate Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PLAYER 360 ══ -->
+  <div id="page-player360" class="page">
+    <div class="page-header">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div class="page-title">Player 360</div>
+          <div class="page-subtitle">Unified player intelligence view</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div class="search-bar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Search by name, ID, email…" id="player-search" oninput="filterPlayers(this.value)"></div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('new-player')">+ Add Player</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="player-list">
+      <div class="grid-3" id="player-cards">
+        <div class="card" onclick="openPlayerModal('Pinklady')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <div class="player-avatar" style="width:40px;height:40px;font-size:14px">PL</div>
+            <div><div style="font-weight:500">Pinklady</div><div style="font-size:11px;color:var(--text-muted)">ID: WP-004821</div></div>
+            <div style="margin-left:auto"><span class="badge badge-amber">At-Risk</span></div>
+          </div>
+          <div class="stat-row"><div class="stat-key">KYC Status</div><div class="stat-v">Verified</div></div>
+          <div class="stat-row"><div class="stat-key">Risk Score</div><div class="stat-v" style="color:var(--amber)">72</div></div>
+          <div class="stat-row"><div class="stat-key">Open Alerts</div><div class="stat-v">2</div></div>
+          <div class="stat-row"><div class="stat-key">Last Active</div><div class="stat-v">Today</div></div>
+        </div>
+        <div class="card" onclick="openPlayerModal('DarkKnight88')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <div class="player-avatar" style="width:40px;height:40px;font-size:14px;background:linear-gradient(135deg,var(--red),#ff8c8c)">DK</div>
+            <div><div style="font-weight:500">DarkKnight88</div><div style="font-size:11px;color:var(--text-muted)">ID: WP-003194</div></div>
+            <div style="margin-left:auto"><span class="badge badge-red">High Risk</span></div>
+          </div>
+          <div class="stat-row"><div class="stat-key">KYC Status</div><div class="stat-v">Verified</div></div>
+          <div class="stat-row"><div class="stat-key">Risk Score</div><div class="stat-v" style="color:var(--red)">88</div></div>
+          <div class="stat-row"><div class="stat-key">Open Alerts</div><div class="stat-v">1</div></div>
+          <div class="stat-row"><div class="stat-key">Last Active</div><div class="stat-v">Today</div></div>
+        </div>
+        <div class="card" onclick="openPlayerModal('StarPlayer99')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <div class="player-avatar" style="width:40px;height:40px;font-size:14px;background:linear-gradient(135deg,var(--blue),#84c4ff)">SP</div>
+            <div><div style="font-weight:500">StarPlayer99</div><div style="font-size:11px;color:var(--text-muted)">ID: WP-007740</div></div>
+            <div style="margin-left:auto"><span class="badge badge-green">Low Risk</span></div>
+          </div>
+          <div class="stat-row"><div class="stat-key">KYC Status</div><div class="stat-v">Verified</div></div>
+          <div class="stat-row"><div class="stat-key">Risk Score</div><div class="stat-v" style="color:var(--woolph-green)">28</div></div>
+          <div class="stat-row"><div class="stat-key">Open Alerts</div><div class="stat-v">0</div></div>
+          <div class="stat-row"><div class="stat-key">Last Active</div><div class="stat-v">Yesterday</div></div>
+        </div>
+        <div class="card" onclick="openPlayerModal('MrFortune')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <div class="player-avatar" style="width:40px;height:40px;font-size:14px;background:linear-gradient(135deg,var(--amber),#ffd084)">MF</div>
+            <div><div style="font-weight:500">MrFortune</div><div style="font-size:11px;color:var(--text-muted)">ID: WP-001882</div></div>
+            <div style="margin-left:auto"><span class="badge badge-amber">Bonus Abuser</span></div>
+          </div>
+          <div class="stat-row"><div class="stat-key">KYC Status</div><div class="stat-v">Verified</div></div>
+          <div class="stat-row"><div class="stat-key">Risk Score</div><div class="stat-v" style="color:var(--amber)">55</div></div>
+          <div class="stat-row"><div class="stat-key">Open Alerts</div><div class="stat-v">1</div></div>
+          <div class="stat-row"><div class="stat-key">Last Active</div><div class="stat-v">2 days ago</div></div>
+        </div>
+        <div class="card" onclick="openPlayerModal('NightOwl')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <div class="player-avatar" style="width:40px;height:40px;font-size:14px;background:linear-gradient(135deg,#8b5cf6,#c4b5fd)">NO</div>
+            <div><div style="font-weight:500">NightOwl</div><div style="font-size:11px;color:var(--text-muted)">ID: WP-005531</div></div>
+            <div style="margin-left:auto"><span class="badge badge-red">High Risk</span></div>
+          </div>
+          <div class="stat-row"><div class="stat-key">KYC Status</div><div class="stat-v">Pending</div></div>
+          <div class="stat-row"><div class="stat-key">Risk Score</div><div class="stat-v" style="color:var(--red)">68</div></div>
+          <div class="stat-row"><div class="stat-key">Open Alerts</div><div class="stat-v">1</div></div>
+          <div class="stat-row"><div class="stat-key">Last Active</div><div class="stat-v">3 days ago</div></div>
+        </div>
+        <div class="card" onclick="openPlayerModal('GoldenAce')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <div class="player-avatar" style="width:40px;height:40px;font-size:14px;background:linear-gradient(135deg,#14b8a6,#5eead4)">GA</div>
+            <div><div style="font-weight:500">GoldenAce</div><div style="font-size:11px;color:var(--text-muted)">ID: WP-009003</div></div>
+            <div style="margin-left:auto"><span class="badge badge-amber">At-Risk</span></div>
+          </div>
+          <div class="stat-row"><div class="stat-key">KYC Status</div><div class="stat-v">Verified</div></div>
+          <div class="stat-row"><div class="stat-key">Risk Score</div><div class="stat-v" style="color:var(--amber)">61</div></div>
+          <div class="stat-row"><div class="stat-key">Open Alerts</div><div class="stat-v">1</div></div>
+          <div class="stat-row"><div class="stat-key">Last Active</div><div class="stat-v">Today</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SAFER GAMBLING ══ -->
+  <div id="page-safer-gambling" class="page">
+    <div class="page-header">
+      <div class="page-title">Safer Gambling</div>
+      <div class="page-subtitle">Responsible gambling monitoring & intervention management</div>
+    </div>
+
+    <div class="grid-4">
+      <div class="card card-sm"><div class="card-title">At-Risk Players</div><div class="card-val" style="color:var(--amber)">12</div><div class="card-delta delta-up">↑ 2 this week</div></div>
+      <div class="card card-sm"><div class="card-title">Self-Excluded</div><div class="card-val">8</div><div class="card-delta" style="color:var(--text-muted)">Active exclusions</div></div>
+      <div class="card card-sm"><div class="card-title">Interventions</div><div class="card-val">5</div><div class="card-delta" style="color:var(--text-muted)">This month</div></div>
+      <div class="card card-sm"><div class="card-title">Limit Breaches</div><div class="card-val" style="color:var(--red)">3</div><div class="card-delta delta-down">Needs review</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">RG Intervention Queue</div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--red)"></div><div class="alert-body"><div class="alert-title">Loss chasing — 4h session, R3,200 lost</div><div class="alert-meta">Pinklady · Today 02:14 AM</div></div><button class="btn btn-sm btn-primary" onclick="showToast('Intervention logged')">Intervene</button></div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--amber)"></div><div class="alert-body"><div class="alert-title">Deposit limit reached 3× this week</div><div class="alert-meta">MrFortune · Yesterday</div></div><button class="btn btn-sm" onclick="showToast('Under review')">Review</button></div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--amber)"></div><div class="alert-body"><div class="alert-title">Reversal rate spike — 40% this week</div><div class="alert-meta">GoldenAce · 11 May</div></div><button class="btn btn-sm" onclick="showToast('Under review')">Review</button></div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--woolph-green)"></div><div class="alert-body"><div class="alert-title">Self-exclusion request received</div><div class="alert-meta">NightOwl · 10 May</div></div><button class="btn btn-sm btn-primary" onclick="showToast('Self-exclusion processed')">Process</button></div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Session & Spend Limits</div>
+          <div class="stat-row"><div class="stat-key">Daily Deposit Limit</div><div class="stat-v">Configurable per player</div></div>
+          <div class="stat-row"><div class="stat-key">Weekly Session Limit</div><div class="stat-v">Operator-set default: 20h</div></div>
+          <div class="stat-row"><div class="stat-key">Cooling-Off Period</div><div class="stat-v">24h / 7d / 30d</div></div>
+          <div class="stat-row"><div class="stat-key">WCGRB RG Report Due</div><div class="stat-v" style="color:var(--amber)">30 May 2026</div></div>
+          <button class="btn btn-primary" style="margin-top:14px;width:100%" onclick="showToast('RG Report exported')">Export RG Report</button>
+        </div>
+        <div class="card">
+          <div class="card-title">National Self-Exclusion Registry</div>
+          <div style="padding:16px;text-align:center;background:var(--surface2);border-radius:8px;margin-bottom:12px">
+            <div style="font-size:28px;font-weight:600;color:var(--woolph-green)">8</div>
+            <div style="font-size:12px;color:var(--text-muted)">Active exclusions synced</div>
+          </div>
+          <button class="btn" style="width:100%;margin-bottom:8px" onclick="showToast('Syncing with national registry…')">Sync Registry</button>
+          <button class="btn btn-danger" style="width:100%" onclick="showToast('Checking player against registry…')">Check Player</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BONUS ABUSE ══ -->
+  <div id="page-bonus" class="page">
+    <div class="page-header">
+      <div class="page-title">Bonus Abuse Detection</div>
+      <div class="page-subtitle">AI-assisted bonus abuse alerts & recommendations</div>
+    </div>
+
+    <div class="grid-4">
+      <div class="card card-sm"><div class="card-title">Active Flags</div><div class="card-val" style="color:var(--amber)">3</div></div>
+      <div class="card card-sm"><div class="card-title">Verified Abusers</div><div class="card-val" style="color:var(--red)">7</div></div>
+      <div class="card card-sm"><div class="card-title">Bonus Saved (30d)</div><div class="card-val" style="color:var(--woolph-green)">R 18,400</div></div>
+      <div class="card card-sm"><div class="card-title">Avg Abuse Score</div><div class="card-val">64</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Abuse Flags</div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--red)"></div><div class="alert-body"><div class="alert-title">Multi-account bonus stacking</div><div class="alert-meta">MrFortune · 4 accounts linked · R2,200 claimed</div></div><span class="badge badge-red">Confirmed</span></div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--amber)"></div><div class="alert-body"><div class="alert-title">Bonus bet ratio 98% — low variance</div><div class="alert-meta">GoldenAce · 13 May</div></div><span class="badge badge-amber">Suspected</span></div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--amber)"></div><div class="alert-body"><div class="alert-title">Same device — 3 accounts detected</div><div class="alert-meta">NightOwl · device fingerprint match</div></div><span class="badge badge-amber">Review</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">AI Bonus Recommendations</div>
+        <div style="padding:14px;background:var(--surface2);border-radius:8px;margin-bottom:12px;border:1px solid var(--border)">
+          <div style="font-size:12px;color:var(--woolph-green);font-weight:600;margin-bottom:6px">🤖 AI Recommendation</div>
+          <div style="font-size:13px;color:var(--text-secondary)">Based on recent abuse patterns, consider reducing the welcome bonus cap for IP range 196.25.x.x (ZA — high abuse cluster) by 40%, and requiring 3x wagering before withdrawal.</div>
+        </div>
+        <div class="stat-row"><div class="stat-key">Rule: Bonus Bet Ratio Threshold</div><div class="stat-v">≥ 85%</div></div>
+        <div class="stat-row"><div class="stat-key">Linked Account Check</div><div class="stat-v">Device + IP + Email</div></div>
+        <div class="stat-row"><div class="stat-key">Auto-Flag Sensitivity</div><div class="stat-v">Medium</div></div>
+        <button class="btn btn-primary" style="margin-top:14px;width:100%" onclick="showToast('Settings updated')">Update Rules</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CASE MANAGEMENT ══ -->
+  <div id="page-cases" class="page">
+    <div class="page-header">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div class="page-title">Case Management</div>
+          <div class="page-subtitle">Open, escalated and closed cases</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div class="toggle">
+            <button class="toggle-btn active" onclick="switchView('table',this)">Table</button>
+            <button class="toggle-btn" onclick="switchView('kanban',this)">Kanban</button>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('new-case')">+ New Case</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cases-table-view">
+      <div class="grid-4" style="margin-bottom:20px">
+        <div class="card card-sm"><div class="card-title">Open</div><div class="card-val" style="color:var(--woolph-green)">8</div></div>
+        <div class="card card-sm"><div class="card-title">In Progress</div><div class="card-val" style="color:var(--blue)">5</div></div>
+        <div class="card card-sm"><div class="card-title">Escalated</div><div class="card-val" style="color:var(--red)">2</div></div>
+        <div class="card card-sm"><div class="card-title">Avg Resolution</div><div class="card-val">2.4d</div></div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Case ID</th><th>Player</th><th>Type</th><th>Status</th><th>Assigned</th><th>Due</th><th>Priority</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>CASE-0041</td><td>DarkKnight88</td><td>Fraud Investigation</td><td><span class="badge badge-red">Escalated</span></td><td>Marcus T.</td><td style="color:var(--red)">Overdue</td><td><span class="badge badge-red">High</span></td><td><button class="btn btn-sm" onclick="showToast('Case opened')">View</button></td></tr>
+              <tr><td>CASE-0040</td><td>Pinklady</td><td>KYC Review</td><td><span class="badge badge-blue">In Progress</span></td><td>Sarah J.</td><td style="color:var(--amber)">Today</td><td><span class="badge badge-amber">Med</span></td><td><button class="btn btn-sm" onclick="showToast('Case opened')">View</button></td></tr>
+              <tr><td>CASE-0039</td><td>MrFortune</td><td>Bonus Abuse</td><td><span class="badge badge-blue">In Progress</span></td><td>Sarah J.</td><td>15 May</td><td><span class="badge badge-amber">Med</span></td><td><button class="btn btn-sm" onclick="showToast('Case opened')">View</button></td></tr>
+              <tr><td>CASE-0038</td><td>NightOwl</td><td>AML — CTR</td><td><span class="badge badge-green">Open</span></td><td>Kai L.</td><td>16 May</td><td><span class="badge badge-red">High</span></td><td><button class="btn btn-sm" onclick="showToast('Case opened')">View</button></td></tr>
+              <tr><td>CASE-0037</td><td>GoldenAce</td><td>SOW Request</td><td><span class="badge badge-green">Open</span></td><td>—</td><td>18 May</td><td><span class="badge badge-gray">Low</span></td><td><button class="btn btn-sm btn-primary" onclick="showToast('Assigned to you')">Assign</button></td></tr>
+              <tr><td>CASE-0036</td><td>StarPlayer99</td><td>RG Intervention</td><td><span class="badge badge-gray">Closed</span></td><td>Marcus T.</td><td>—</td><td><span class="badge badge-gray">Low</span></td><td><button class="btn btn-sm" onclick="showToast('Case opened')">View</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="cases-kanban-view" style="display:none">
+      <div class="kanban">
+        <div class="kanban-col">
+          <div class="kanban-col-header">Open <span style="color:var(--woolph-green);margin-left:6px">8</span></div>
+          <div class="kanban-body">
+            <div class="kanban-card"><div class="kanban-card-title">CASE-0037 — GoldenAce</div><div class="kanban-card-sub">SOW Request · Low</div></div>
+            <div class="kanban-card"><div class="kanban-card-title">CASE-0038 — NightOwl</div><div class="kanban-card-sub">AML CTR · High</div></div>
+          </div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">In Progress <span style="color:var(--blue);margin-left:6px">5</span></div>
+          <div class="kanban-body">
+            <div class="kanban-card"><div class="kanban-card-title">CASE-0040 — Pinklady</div><div class="kanban-card-sub">KYC Review · Med</div></div>
+            <div class="kanban-card"><div class="kanban-card-title">CASE-0039 — MrFortune</div><div class="kanban-card-sub">Bonus Abuse · Med</div></div>
+          </div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">Escalated <span style="color:var(--red);margin-left:6px">2</span></div>
+          <div class="kanban-body">
+            <div class="kanban-card"><div class="kanban-card-title">CASE-0041 — DarkKnight88</div><div class="kanban-card-sub">Fraud · High · Overdue</div></div>
+          </div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">Closed</div>
+          <div class="kanban-body">
+            <div class="kanban-card"><div class="kanban-card-title">CASE-0036 — StarPlayer99</div><div class="kanban-card-sub">RG Intervention · Done</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ COMPLIANCE STATUS ══ -->
+  <div id="page-compliance" class="page">
+    <div class="page-header">
+      <div class="page-title">Compliance Status</div>
+      <div class="page-subtitle">Regulatory overview — South Africa primary market</div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Regulatory Framework</div>
+          <div class="compliance-item"><div class="rag-dot rag-green"></div><div class="compliance-name">FIC Act (AML/CFT)</div><div class="compliance-status">Compliant · Last reviewed 01 May</div></div>
+          <div class="compliance-item"><div class="rag-dot rag-green"></div><div class="compliance-name">POPIA (Data Privacy)</div><div class="compliance-status">Compliant · PIR filed</div></div>
+          <div class="compliance-item"><div class="rag-dot rag-green"></div><div class="compliance-name">WCGRB License</div><div class="compliance-status">Active · Expires Dec 2026</div></div>
+          <div class="compliance-item"><div class="rag-dot rag-green"></div><div class="compliance-name">ECGRB License</div><div class="compliance-status">Active · Expires Mar 2027</div></div>
+          <div class="compliance-item"><div class="rag-dot rag-amber"></div><div class="compliance-name">ISO 27001</div><div class="compliance-status">Audit due Q3 2026</div></div>
+          <div class="compliance-item"><div class="rag-dot rag-amber"></div><div class="compliance-name">SOC 2 Type II</div><div class="compliance-status">Readiness: 68% complete</div></div>
+          <div class="compliance-item"><div class="rag-dot rag-amber"></div><div class="compliance-name">GDPR</div><div class="compliance-status">Review pending — EU players</div></div>
+          <div class="compliance-item"><div class="rag-dot rag-green"></div><div class="compliance-name">FICA (KYC/CDD)</div><div class="compliance-status">Compliant · Full CDD process active</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Certification Progress</div>
+          <div class="progress-row"><div class="progress-label">ISO 27001</div><div class="progress-bar"><div class="progress-fill" style="width:42%"></div></div><div class="progress-val">42%</div></div>
+          <div class="progress-row"><div class="progress-label">SOC 2 Type II</div><div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div><div class="progress-val">68%</div></div>
+          <div class="progress-row"><div class="progress-label">POPIA Readiness</div><div class="progress-bar"><div class="progress-fill" style="width:95%"></div></div><div class="progress-val">95%</div></div>
+          <div class="progress-row"><div class="progress-label">FIC Act Controls</div><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div><div class="progress-val">100%</div></div>
+        </div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">MLRO Dashboard</div>
+          <div class="stat-row"><div class="stat-key">MLRO</div><div class="stat-v">Kameshni Naidoo</div></div>
+          <div class="stat-row"><div class="stat-key">STRs Filed (YTD)</div><div class="stat-v">18</div></div>
+          <div class="stat-row"><div class="stat-key">CTRs Filed (YTD)</div><div class="stat-v">47</div></div>
+          <div class="stat-row"><div class="stat-key">Pending STR Review</div><div class="stat-v" style="color:var(--amber)">2</div></div>
+          <button class="btn btn-primary" style="margin-top:14px;width:100%" onclick="showToast('MLRO report exported')">Export MLRO Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RULES ENGINE ══ -->
+  <div id="page-rules" class="page">
+    <div class="page-header">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div class="page-title">Rules Engine</div>
+          <div class="page-subtitle">Configure detection rules, thresholds and alert triggers</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openModal('new-rule')">+ Add Rule</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('rules','fraud-rules',this)">Fraud</div>
+      <div class="tab" onclick="switchTab('rules','aml-rules',this)">AML</div>
+      <div class="tab" onclick="switchTab('rules','rg-rules',this)">Responsible Gambling</div>
+      <div class="tab" onclick="switchTab('rules','bonus-rules',this)">Bonus</div>
+    </div>
+
+    <div id="tab-fraud-rules">
+      <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--woolph-green);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">High Velocity Deposits</div><div class="rule-desc">5+ deposits within 60 minutes exceeding R5,000 total</div></div><span class="badge badge-green">Active</span><button class="btn btn-sm" onclick="showToast('Rule editor opening…')">Edit</button></div>
+      <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--woolph-green);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">IP Geolocation Mismatch</div><div class="rule-desc">Login IP country differs from KYC country of residence</div></div><span class="badge badge-green">Active</span><button class="btn btn-sm" onclick="showToast('Rule editor opening…')">Edit</button></div>
+      <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--woolph-green);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">Inconsistent KYC Answers</div><div class="rule-desc">3+ mismatched answers across KYC sessions</div></div><span class="badge badge-green">Active</span><button class="btn btn-sm" onclick="showToast('Rule editor opening…')">Edit</button></div>
+      <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--amber);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">Device Fingerprint Sharing</div><div class="rule-desc">2+ accounts on same device fingerprint within 30 days</div></div><span class="badge badge-amber">Paused</span><button class="btn btn-sm" onclick="showToast('Rule activated')">Activate</button></div>
+    </div>
+    <div id="tab-aml-rules" style="display:none">
+      <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--woolph-green);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">FIC Act CTR Threshold</div><div class="rule-desc">Cash in/out exceeds R24,999 in single transaction</div></div><span class="badge badge-green">Active</span><button class="btn btn-sm" onclick="showToast('Rule editor opening…')">Edit</button></div>
+      <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--woolph-green);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">Structuring Detection</div><div class="rule-desc">5+ deposits just below R25,000 in 7-day window</div></div><span class="badge badge-green">Active</span><button class="btn btn-sm" onclick="showToast('Rule editor opening…')">Edit</button></div>
+    </div>
+    <div id="tab-rg-rules" style="display:none">
+      <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--woolph-green);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">Loss Chasing Detection</div><div class="rule-desc">Bet size doubles 3+ times after consecutive losses</div></div><span class="badge badge-green">Active</span><button class="btn btn-sm" onclick="showToast('Rule editor opening…')">Edit</button></div>
+      <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--woolph-green);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">Late Night Session Alert</div><div class="rule-desc">Active sessions between 02:00–05:00 exceeding 2 hours</div></div><span class="badge badge-green">Active</span><button class="btn btn-sm" onclick="showToast('Rule editor opening…')">Edit</button></div>
+    </div>
+    <div id="tab-bonus-rules" style="display:none">
+      <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--woolph-green);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">Bonus Bet Ratio</div><div class="rule-desc">≥85% of bets placed with bonus funds — low variance wagering</div></div><span class="badge badge-green">Active</span><button class="btn btn-sm" onclick="showToast('Rule editor opening…')">Edit</button></div>
+      <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--woolph-green);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">Multi-Account Bonus Stacking</div><div class="rule-desc">Same email domain, IP, or device claiming multiple welcome offers</div></div><span class="badge badge-green">Active</span><button class="btn btn-sm" onclick="showToast('Rule editor opening…')">Edit</button></div>
+    </div>
+  </div>
+
+  <!-- ══ BULK UPLOAD ══ -->
+  <div id="page-upload" class="page">
+    <div class="page-header">
+      <div class="page-title">Bulk Upload</div>
+      <div class="page-subtitle">Upload player data, backfills and flag updates</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Upload File</div>
+        <div style="border:2px dashed var(--border2);border-radius:10px;padding:40px;text-align:center;margin-bottom:16px;cursor:pointer" onclick="showToast('File picker opening…')">
+          <div style="font-size:32px;margin-bottom:8px;opacity:.5">↑</div>
+          <div style="font-size:14px;color:var(--text-secondary);margin-bottom:4px">Drop CSV or Excel file here</div>
+          <div style="font-size:12px;color:var(--text-muted)">Max 50MB · CSV, XLSX supported</div>
+        </div>
+        <div class="form-group"><label class="form-label">Upload Type</label><select class="form-control"><option>Player Data Backfill</option><option>Alert Flag Updates</option><option>KYC Data</option><option>Transaction History</option></select></div>
+        <div class="form-group"><label class="form-label">Target Brand</label><select class="form-control"><option>Grand Casino ZA</option><option>888 Africa</option><option>Skybet SA</option></select></div>
+        <button class="btn btn-primary" onclick="showToast('Upload started — processing…')">Start Upload</button>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">Upload History</div>
+          <div class="stat-row"><div class="stat-key">2026-05-13 08:44 · KYC Backfill</div><div class="stat-v" style="color:var(--woolph-green)">Done · 412 rows</div></div>
+          <div class="stat-row"><div class="stat-key">2026-05-12 14:22 · Player Flags</div><div class="stat-v" style="color:var(--woolph-green)">Done · 88 rows</div></div>
+          <div class="stat-row"><div class="stat-key">2026-05-10 09:00 · Transactions</div><div class="stat-v" style="color:var(--amber)">3 failures</div></div>
+          <div class="stat-row"><div class="stat-key">2026-05-08 16:30 · KYC Backfill</div><div class="stat-v" style="color:var(--woolph-green)">Done · 230 rows</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Upload Requirements</div>
+          <div style="font-size:12px;color:var(--text-secondary);line-height:2">
+            <div>✦ Required columns: player_id, brand, timestamp</div>
+            <div>✦ Date format: YYYY-MM-DD HH:mm:ss</div>
+            <div>✦ Player IDs must match existing records</div>
+            <div>✦ UTF-8 encoding only</div>
+            <div>✦ Max 100,000 rows per upload</div>
+          </div>
+          <button class="btn" style="margin-top:12px;width:100%" onclick="showToast('Template downloaded')">Download Template</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ REPORTS ══ -->
+  <div id="page-reports" class="page">
+    <div class="page-header">
+      <div class="page-title">Reports</div>
+      <div class="page-subtitle">Regulatory, operational and custom reports</div>
+    </div>
+    <div class="grid-3">
+      <div class="card" style="cursor:pointer" onclick="showToast('Generating MLRO report…')">
+        <div style="font-size:24px;margin-bottom:8px;color:var(--woolph-green)">⊞</div>
+        <div style="font-weight:500;margin-bottom:4px">MLRO Monthly Report</div>
+        <div style="font-size:12px;color:var(--text-muted)">STR/CTR summary for FIC Act submission</div>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="showToast('Generating RG report…')">
+        <div style="font-size:24px;margin-bottom:8px;color:var(--blue)">♡</div>
+        <div style="font-weight:500;margin-bottom:4px">WCGRB RG Report</div>
+        <div style="font-size:12px;color:var(--text-muted)">Quarterly responsible gambling report</div>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="showToast('Generating audit report…')">
+        <div style="font-size:24px;margin-bottom:8px;color:var(--amber)">✦</div>
+        <div style="font-weight:500;margin-bottom:4px">Audit Log Export</div>
+        <div style="font-size:12px;color:var(--text-muted)">Immutable event log — FIC Act required</div>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="showToast('Generating SLA report…')">
+        <div style="font-size:24px;margin-bottom:8px;color:var(--woolph-green)">◎</div>
+        <div style="font-weight:500;margin-bottom:4px">SLA Compliance Report</div>
+        <div style="font-size:12px;color:var(--text-muted)">Alert resolution times by team member</div>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="showToast('Generating compliance report…')">
+        <div style="font-size:24px;margin-bottom:8px;color:var(--red)">⊗</div>
+        <div style="font-weight:500;margin-bottom:4px">Regulatory Status Report</div>
+        <div style="font-size:12px;color:var(--text-muted)">RAG status across all licenses</div>
+      </div>
+      <div class="card" style="cursor:pointer;border:1px dashed var(--border2)" onclick="showToast('Custom report builder opening…')">
+        <div style="font-size:24px;margin-bottom:8px;color:var(--text-muted)">+</div>
+        <div style="font-weight:500;margin-bottom:4px;color:var(--text-secondary)">Custom Report</div>
+        <div style="font-size:12px;color:var(--text-muted)">Build a bespoke report</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SETTINGS ══ -->
+  <div id="page-settings" class="page">
+    <div class="page-header">
+      <div class="page-title">Settings</div>
+      <div class="page-subtitle">Platform configuration & team management</div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('settings','profile-tab',this)">Profile</div>
+      <div class="tab" onclick="switchTab('settings','team-tab',this)">Team</div>
+      <div class="tab" onclick="switchTab('settings','integrations-tab',this)">Integrations</div>
+      <div class="tab" onclick="switchTab('settings','notifications-tab',this)">Notifications</div>
+    </div>
+
+    <div id="tab-profile-tab">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Account</div>
+          <div class="form-group"><label class="form-label">Full Name</label><input class="form-control" value="Tessa Samuels"></div>
+          <div class="form-group"><label class="form-label">Role</label><input class="form-control" value="Founder & CEO" readonly style="opacity:.6"></div>
+          <div class="form-group"><label class="form-label">Email</label><input class="form-control" value="tessa@woolph.com"></div>
+          <div class="form-group"><label class="form-label">Brand</label><select class="form-control"><option>Grand Casino ZA</option><option>888 Africa</option></select></div>
+          <button class="btn btn-primary" onclick="showToast('Profile updated')">Save Changes</button>
+        </div>
+        <div class="card">
+          <div class="card-title">Platform Settings</div>
+          <div class="stat-row"><div class="stat-key">SLA Default (Fraud)</div><div class="stat-v">4 hours</div></div>
+          <div class="stat-row"><div class="stat-key">SLA Default (AML)</div><div class="stat-v">24 hours</div></div>
+          <div class="stat-row"><div class="stat-key">SLA Default (RG)</div><div class="stat-v">12 hours</div></div>
+          <div class="stat-row"><div class="stat-key">Data Retention</div><div class="stat-v">7 years (FIC Act)</div></div>
+          <div class="stat-row"><div class="stat-key">Hosting Region</div><div class="stat-v">AWS af-south-1 (Cape Town)</div></div>
+          <div class="stat-row"><div class="stat-key">Multi-tenant Mode</div><div class="stat-v" style="color:var(--woolph-green)">Active</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-team-tab" style="display:none">
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Role</th><th>Department</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>Tessa Samuels</td><td>Founder & CEO</td><td>Product</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-sm" onclick="showToast('Edit user')">Edit</button></td></tr>
+              <tr><td>Thami Nyathikazi</td><td>COO</td><td>Operations</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-sm" onclick="showToast('Edit user')">Edit</button></td></tr>
+              <tr><td>Kameshni Naidoo</td><td>MLRO</td><td>Compliance</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-sm" onclick="showToast('Edit user')">Edit</button></td></tr>
+              <tr><td>Jessica Merdjan</td><td>CLCO</td><td>Legal</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-sm" onclick="showToast('Edit user')">Edit</button></td></tr>
+              <tr><td>Trevor Bernberg</td><td>BDM</td><td>Business Dev</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-sm" onclick="showToast('Edit user')">Edit</button></td></tr>
+              <tr><td>Mdu Khumalo</td><td>Tech Manager</td><td>Technology</td><td><span class="badge badge-green">Active</span></td><td><button class="btn btn-sm" onclick="showToast('Edit user')">Edit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px"><button class="btn btn-primary btn-sm" onclick="openModal('new-user')">+ Invite Team Member</button></div>
+      </div>
+    </div>
+
+    <div id="tab-integrations-tab" style="display:none">
+      <div class="grid-2">
+        <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--woolph-green);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">Apache Kafka</div><div class="rule-desc">Event streaming · Connected to af-south-1</div></div><span class="badge badge-green">Live</span></div>
+        <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--amber);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">SumSub</div><div class="rule-desc">KYC / Identity Verification</div></div><span class="badge badge-amber">Config needed</span></div>
+        <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--woolph-green);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">AWS S3 (Document Storage)</div><div class="rule-desc">af-south-1 · POPIA-compliant</div></div><span class="badge badge-green">Live</span></div>
+        <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--text-muted);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">LexisNexis / RiskNarrative</div><div class="rule-desc">PEP & Sanctions screening</div></div><span class="badge badge-gray">Phase 2</span></div>
+        <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--text-muted);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">Shufti Pro</div><div class="rule-desc">Document verification iFrame</div></div><span class="badge badge-gray">Phase 2</span></div>
+        <div class="rule-card"><div style="width:10px;height:10px;border-radius:50%;background:var(--woolph-green);flex-shrink:0"></div><div class="rule-body"><div class="rule-name">Operator Back-Office API</div><div class="rule-desc">REST webhook · Grand Casino ZA</div></div><span class="badge badge-green">Live</span></div>
+      </div>
+    </div>
+
+    <div id="tab-notifications-tab" style="display:none">
+      <div class="card">
+        <div class="card-title">Alert Notification Settings</div>
+        <div class="stat-row"><div class="stat-key">High-priority fraud alerts</div><div class="stat-v"><select class="form-control" style="width:160px"><option>Email + In-app</option><option>In-app only</option><option>Email only</option></select></div></div>
+        <div class="stat-row"><div class="stat-key">SLA breach warnings</div><div class="stat-v"><select class="form-control" style="width:160px"><option>Email + In-app</option><option>In-app only</option></select></div></div>
+        <div class="stat-row"><div class="stat-key">Daily compliance digest</div><div class="stat-v"><select class="form-control" style="width:160px"><option>Email only</option><option>Off</option></select></div></div>
+        <div style="margin-top:16px"><button class="btn btn-primary" onclick="showToast('Notification preferences saved')">Save Preferences</button></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()" id="modal-inner">
+    <div class="modal-title" id="modal-title">New Case</div>
+    <div id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitModal()">Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- PLAYER DETAIL MODAL -->
+<div class="modal-overlay" id="player-modal" onclick="closePlayerModal()">
+  <div class="modal" onclick="event.stopPropagation()" style="width:600px">
+    <div id="player-modal-content"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closePlayerModal()">Close</button>
+      <button class="btn btn-primary" onclick="showToast('Opening full profile…');closePlayerModal()">Full Profile →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ── NAVIGATION ──
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const el = document.getElementById('page-' + page);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + page + "'")) {
+      n.classList.add('active');
+    }
+  });
+  window.scrollTo(0, 0);
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── MODALS ──
+const modalForms = {
+  'new-case': {
+    title: 'Create New Case',
+    body: `<div class="form-group"><label class="form-label">Player ID</label><input class="form-control" placeholder="e.g. WP-001234"></div>
+           <div class="form-group"><label class="form-label">Case Type</label><select class="form-control"><option>Fraud Investigation</option><option>AML Review</option><option>KYC Review</option><option>RG Intervention</option><option>Bonus Abuse</option></select></div>
+           <div class="form-group"><label class="form-label">Priority</label><select class="form-control"><option>High</option><option>Medium</option><option>Low</option></select></div>
+           <div class="form-group"><label class="form-label">Description</label><textarea class="form-control" rows="3" placeholder="Describe the issue…"></textarea></div>`
+  },
+  'new-alert': {
+    title: 'Manual Alert',
+    body: `<div class="form-group"><label class="form-label">Player ID</label><input class="form-control" placeholder="e.g. WP-001234"></div>
+           <div class="form-group"><label class="form-label">Alert Type</label><select class="form-control"><option>Fraud</option><option>AML</option><option>Responsible Gambling</option><option>Bonus Abuse</option></select></div>
+           <div class="form-group"><label class="form-label">Notes</label><textarea class="form-control" rows="3" placeholder="Details…"></textarea></div>`
+  },
+  'new-rule': {
+    title: 'Add Detection Rule',
+    body: `<div class="form-group"><label class="form-label">Rule Name</label><input class="form-control" placeholder="e.g. Large Withdrawal Alert"></div>
+           <div class="form-group"><label class="form-label">Category</label><select class="form-control"><option>Fraud</option><option>AML</option><option>Responsible Gambling</option><option>Bonus</option></select></div>
+           <div class="form-group"><label class="form-label">Condition</label><input class="form-control" placeholder="e.g. withdrawal_amount > 25000"></div>
+           <div class="form-group"><label class="form-label">Action</label><select class="form-control"><option>Create Alert</option><option>Flag for Review</option><option>Block Transaction</option></select></div>`
+  },
+  'new-player': {
+    title: 'Add Player',
+    body: `<div class="form-group"><label class="form-label">Player Username</label><input class="form-control" placeholder="Username"></div>
+           <div class="form-group"><label class="form-label">Email</label><input class="form-control" type="email" placeholder="player@email.com"></div>
+           <div class="form-group"><label class="form-label">Brand</label><select class="form-control"><option>Grand Casino ZA</option><option>888 Africa</option></select></div>
+           <div class="form-group"><label class="form-label">KYC Status</label><select class="form-control"><option>Pending</option><option>Verified</option><option>Failed</option></select></div>`
+  },
+  'new-user': {
+    title: 'Invite Team Member',
+    body: `<div class="form-group"><label class="form-label">Email</label><input class="form-control" type="email" placeholder="colleague@woolph.com"></div>
+           <div class="form-group"><label class="form-label">Role</label><select class="form-control"><option>Compliance Analyst</option><option>Fraud Investigator</option><option>MLRO</option><option>Read Only</option></select></div>`
+  }
+};
+
+function openModal(type) {
+  const m = modalForms[type];
+  if (!m) return;
+  document.getElementById('modal-title').textContent = m.title;
+  document.getElementById('modal-body').innerHTML = m.body;
+  document.getElementById('modal-overlay').classList.add('open');
+  window._currentModal = type;
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+function submitModal() {
+  closeModal();
+  showToast('Saved successfully');
+}
+
+// ── PLAYER MODAL ──
+const players = {
+  'Pinklady': {initials:'PL', color:'linear-gradient(135deg,#64D972,#93F9C0)', risk:72, riskClass:'risk-med', riskColor:'var(--amber)', id:'WP-004821', kyc:'Verified', alerts:2, brand:'Grand Casino ZA', tags:['At-Risk'], notes:'Player shows signs of loss chasing. Late-night sessions increasing. RG intervention initiated 10 May.'},
+  'DarkKnight88': {initials:'DK', color:'linear-gradient(135deg,#ff5c5c,#ff8c8c)', risk:88, riskClass:'risk-high', riskColor:'var(--red)', id:'WP-003194', kyc:'Verified', alerts:1, brand:'Grand Casino ZA', tags:['High Risk'], notes:'High velocity deposits flagged. SOW documentation pending. CASE-0041 escalated to MLRO.'},
+  'StarPlayer99': {initials:'SP', color:'linear-gradient(135deg,#4a9fff,#84c4ff)', risk:28, riskClass:'risk-low', riskColor:'var(--woolph-green)', id:'WP-007740', kyc:'Verified', alerts:0, brand:'Grand Casino ZA', tags:['Low Risk'], notes:'No issues noted. Consistent play pattern. PEP screening clear.'},
+  'MrFortune': {initials:'MF', color:'linear-gradient(135deg,#f5a623,#ffd084)', risk:55, riskClass:'risk-med', riskColor:'var(--amber)', id:'WP-001882', kyc:'Verified', alerts:1, brand:'Grand Casino ZA', tags:['Bonus Abuser'], notes:'Confirmed multi-account bonus stacking — 4 accounts linked. Bonus suspended.'},
+  'NightOwl': {initials:'NO', color:'linear-gradient(135deg,#8b5cf6,#c4b5fd)', risk:68, riskClass:'risk-high', riskColor:'var(--red)', id:'WP-005531', kyc:'Pending', alerts:1, brand:'Grand Casino ZA', tags:['High Risk'], notes:'KYC incomplete. IP geolocation mismatch (login: NG, KYC: ZA). Under investigation.'},
+  'GoldenAce': {initials:'GA', color:'linear-gradient(135deg,#14b8a6,#5eead4)', risk:61, riskClass:'risk-med', riskColor:'var(--amber)', id:'WP-009003', kyc:'Verified', alerts:1, brand:'Grand Casino ZA', tags:['At-Risk'], notes:'AML threshold breach detected 13 May. R27,500 deposit. CTR required.'},
+};
+
+function openPlayerModal(name) {
+  const p = players[name] || {initials:name.slice(0,2).toUpperCase(), color:'linear-gradient(135deg,#64D972,#93F9C0)', risk:40, riskClass:'risk-low', riskColor:'var(--woolph-green)', id:'WP-000000', kyc:'Unknown', alerts:0, brand:'—', tags:[], notes:'No notes.'};
+  document.getElementById('player-modal-content').innerHTML = `
+    <div class="player-header" style="margin-bottom:16px">
+      <div class="player-avatar" style="background:${p.color}">${p.initials}</div>
+      <div>
+        <div class="player-name">${name}</div>
+        <div class="player-id">${p.id} · ${p.brand}</div>
+        <div style="margin-top:8px;display:flex;gap:6px">${p.tags.map(t=>`<span class="badge badge-${t.includes('High')?'red':t.includes('Bonus')?'amber':'amber'}">${t}</span>`).join('')}</div>
+      </div>
+      <div style="margin-left:auto;text-align:right">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">Risk Score</div>
+        <div style="font-size:32px;font-weight:700;color:${p.riskColor}">${p.risk}</div>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="stat-row"><div class="stat-key">KYC Status</div><div class="stat-v">${p.kyc}</div></div>
+      <div class="stat-row"><div class="stat-key">Open Alerts</div><div class="stat-v">${p.alerts}</div></div>
+    </div>
+    <div style="margin-bottom:12px">
+      <div class="risk-bar"><div class="risk-fill ${p.riskClass}" style="width:${p.risk}%"></div></div>
+    </div>
+    <div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;color:var(--text-secondary);border:1px solid var(--border)">
+      <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:6px">CASE NOTES</div>
+      ${p.notes}
+    </div>
+  `;
+  document.getElementById('player-modal').classList.add('open');
+}
+function closePlayerModal() {
+  document.getElementById('player-modal').classList.remove('open');
+}
+
+// ── TABS ──
+function switchTab(context, activeId, btn) {
+  const allTabs = document.querySelectorAll(`#page-${context} .tab`);
+  allTabs.forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  const prefix = context === 'rules' ? 'tab-' : 'tab-';
+  document.querySelectorAll(`[id^="${prefix}"]`).forEach(el => {
+    if (el.closest(`#page-${context}`)) el.style.display = 'none';
+  });
+  const target = document.getElementById('tab-' + activeId);
+  if (target) target.style.display = 'block';
+}
+
+// ── KANBAN TOGGLE ──
+function switchView(view, btn) {
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('cases-table-view').style.display = view === 'table' ? 'block' : 'none';
+  document.getElementById('cases-kanban-view').style.display = view === 'kanban' ? 'block' : 'none';
+}
+
+// ── SEARCH ──
+function filterPlayers(val) {
+  const cards = document.querySelectorAll('#player-cards .card');
+  cards.forEach(c => {
+    const text = c.textContent.toLowerCase();
+    c.style.display = !val || text.includes(val.toLowerCase()) ? '' : 'none';
+  });
+}
+function handleGlobalSearch(val) {}
+
+// ── CHARTS ──
+window.addEventListener('load', function() {
+  const g = '#64D972', a = '#f5a623', b = '#4a9fff', r = '#ff5c5c';
+  const labels = ['7 May','8 May','9 May','10 May','11 May','12 May','13 May'];
+
+  new Chart(document.getElementById('alertChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {label:'Fraud', data:[3,5,4,7,6,9,8], backgroundColor: g + '99', borderColor: g, borderWidth:1},
+        {label:'AML', data:[1,2,1,3,2,4,3], backgroundColor: a + '99', borderColor: a, borderWidth:1},
+        {label:'RG', data:[0,1,1,1,2,1,2], backgroundColor: b + '99', borderColor: b, borderWidth:1},
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {legend:{display:false}},
+      scales: {
+        x: {stacked:true, grid:{color:'rgba(255,255,255,.05)'}, ticks:{color:'rgba(255,255,255,.4)', font:{size:11}}},
+        y: {stacked:true, grid:{color:'rgba(255,255,255,.05)'}, ticks:{color:'rgba(255,255,255,.4)', font:{size:11}}}
+      }
+    }
+  });
+
+  new Chart(document.getElementById('typeChart'), {
+    type: 'doughnut',
+    data: {
+      labels:['Fraud','AML','RG','Bonus'],
+      datasets:[{data:[55,25,12,8], backgroundColor:[g,a,b,r], borderWidth:0, hoverOffset:4}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'70%',
+      plugins:{legend:{display:false}}
+    }
+  });
+});
+</script>
+</body>
+</html>
